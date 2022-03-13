@@ -21,6 +21,7 @@ app.use("/public", express.static(__dirname + "/public")); // 정적 파일을 �
 
 // route 설정
 app.get("/", (req, res) => res.render("home")); // pug 파일중 home 렌더
+app.get("/*", (req, res) => res.redirect("/")); // 유저가 어디로 가든 home으로 리다이렉트
 
 // port 설정
 const handleListen = () => console.log(`Listening on http://localhost:${port}`);
@@ -43,13 +44,13 @@ html(lang="en")
 ```
 
 그렇다면 nodemon은 무엇일까?<br>
-`nodemon`은 소스가 수정될 때마다 자동으로 서버를 재구동시켜주기 때문에 편하다.
+`nodemon`은 소스가 수정될 때마다 자동으로 서버를 재구동시켜주기 때문에 편하다. `babel-node`가 사용되는 이유는 babel은 최신 js 문법들을 common.js 모듈로 바꿔주므로 서버사이드에서 사용할 수 있기 때문이다.
 
 ```json
 // nodemon.json
 {
   "ignore": ["src/public/*"], // 저장해도 새로고침 안할 위치
-  "exec": "babel-node src/server.js" // nodemon이 watch할 대상
+  "exec": "babel-node src/server.js" // server.js 파일을 babel이 common.JS 모듈로 컴파일 해줌. -> 서버사이드에서 사용하기 위함
 }
 ```
 
@@ -61,3 +62,15 @@ html(lang="en")
     "dev": "nodemon"
   },
 ```
+
+### MVP css 로 기본 css를 예쁘게 꾸며주기
+
+mvp.css는 reset, normalize.css와 달리 코드 한줄로 기본 스타일을 예쁘게 꾸며주는데 사용된다.
+
+```pug
+link(rel="stylesheet", href="https://unpkg.com/mvp.css")
+```
+
+| mvp 사용 전                                                                                                                               | mvp 사용 후                                                                                                                               |
+| ----------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| <img width="378" alt="image" src="https://user-images.githubusercontent.com/68528752/158063226-874a0da6-2113-4a24-b460-a718eec1ef8a.png"> | <img width="381" alt="image" src="https://user-images.githubusercontent.com/68528752/158063248-fdd8bbc3-baa1-4400-8128-79dea2556128.png"> |
