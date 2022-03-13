@@ -23,4 +23,4 @@ $ yarn install
   💡 특정 요구사항 해결과정을 확인하고 싶다면 클릭하여 링크를 따라가 주세요!
 ```
 
-### 1. [서버 설정](https://github.com/Jeong-jeong/Boom/edit/main/studyDoc.md#1-서버-설정)
+### 1. [서버 설정](https://github.com/Jeong-jeong/Boom/blob/main/studyDoc.md#1-서버-설정)
