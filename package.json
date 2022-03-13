@@ -1,0 +1,25 @@
+{
+  "name": "vanilazoom",
+  "version": "1.0.0",
+  "description": "Zoom clone using NodeJS, WebRTC and Websockets",
+  "main": "index.js",
+  "author": "Jeong-jeong",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.17.6",
+    "@babel/core": "^7.17.5",
+    "@babel/node": "^7.16.8",
+    "@babel/preset-env": "^7.16.11",
+    "commitizen": "^4.2.4",
+    "cz-conventional-changelog": "^3.3.0",
+    "cz-emoji": "^1.3.1",
+    "nodemon": "^2.0.15"
+  },
+  "dependencies": {
+    "express": "^4.17.3",
+    "pug": "^3.0.2"
+  }
+}
