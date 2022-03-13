@@ -24,3 +24,6 @@ $ yarn install
 ```
 
 ### 1. [서버 설정](https://github.com/Jeong-jeong/Boom/blob/main/studyDoc.md#1-서버-설정)
+
+- [express와 nodemon](https://github.com/Jeong-jeong/Boom/blob/main/studyDoc.md#express와-nodemon)
+- [MVP css 설정하기](https://github.com/Jeong-jeong/Boom/blob/main/studyDoc.md#mvp-css-로-기본-css를-예쁘게-꾸며주기)
