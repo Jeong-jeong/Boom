@@ -10,6 +10,7 @@ app.use("/public", express.static(__dirname + "/public")); // 정적 파일을 �
 
 // route 설정
 app.get("/", (req, res) => res.render("home")); // pug 파일중 home 렌더
+app.get("/*", (req, res) => res.redirect("/")); // 유저가 어디로 가든 home으로 리다이렉트
 
 // port 설정
 const handleListen = () => console.log(`Listening on http://localhost:${port}`);
