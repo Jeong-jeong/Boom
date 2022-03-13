@@ -2,9 +2,9 @@
 
 ### express와 nodemon
 
-`Node.js`는 js로 브라우저가 아닌 서버를 구축하고, 서버에서 JS가 작동할 수 있게 해주는 런타임 환경이다. [참고](https://ninjaggobugi.tistory.com/9)
-**express**는 Node.js를 서버에서 좀더 활용하기 쉽도록 만든 프레임워크이다. 프론트엔드에서 js를 SPA로 좀 더 쉽게 만들기 위해 리액트와 같은 라이브러리(프레임워크)를 만든 것과 같은 맥락이다.
-**템플릿 엔진**이란?
+`Node.js`는 js로 브라우저가 아닌 서버를 구축하고, 서버에서 JS가 작동할 수 있게 해주는 런타임 환경이다. [(참고)](https://ninjaggobugi.tistory.com/9) <br>
+**express**는 Node.js를 서버에서 좀더 활용하기 쉽도록 만든 프레임워크이다. 프론트엔드에서 js를 SPA로 좀 더 쉽게 만들기 위해 리액트와 같은 라이브러리(프레임워크)를 만든 것과 같은 맥락이다.<br>
+**템플릿 엔진**이란?<br>
 html 코드를 매번 만들 필요없이 최소화하도록 도와주는 템플릿이다.
 
 ```js
@@ -42,7 +42,7 @@ html(lang="en")
 		script(src="/public/js/app.js")
 ```
 
-그렇다면 nodemon은 무엇일까?
+그렇다면 nodemon은 무엇일까?<br>
 `nodemon`은 소스가 수정될 때마다 자동으로 서버를 재구동시켜주기 때문에 편하다.
 
 ```json
