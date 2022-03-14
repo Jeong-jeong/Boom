@@ -27,3 +27,10 @@ $ yarn install
 
 - [express와 nodemon](https://github.com/Jeong-jeong/Boom/blob/main/studyDoc.md#express와-nodemon)
 - [MVP css 설정하기](https://github.com/Jeong-jeong/Boom/blob/main/studyDoc.md#mvp-css-로-기본-css를-예쁘게-꾸며주기)
+
+### 2. [채팅에 Websocket 활용하기](https://github.com/Jeong-jeong/Boom/blob/main/studyDoc.md#2-채팅에-websockets-활용하기)
+
+- [HTTP VS WebSockets](https://github.com/Jeong-jeong/Boom/blob/main/studyDoc.md#http-vs-websockets)
+- [Websocket으로 서버와 브라우저 연결하기](https://github.com/Jeong-jeong/Boom/blob/main/studyDoc.md#websocket으로-서버와-브라우저를-연결하기)
+- [Websocket으로 메세지 주고받기](https://github.com/Jeong-jeong/Boom/blob/main/studyDoc.md#websocket으로-메세지-주고-받기)
+- [Websocket의 한계](https://github.com/Jeong-jeong/Boom/blob/main/studyDoc.md#websocket의-한계)
