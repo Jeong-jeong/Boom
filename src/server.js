@@ -1,3 +1,5 @@
+import http from "http";
+import WebSocket from "ws";
 import express from "express"; // ES6 모듈로 express 모듈 가져오기
 
 const app = express(); // express 객체 생성
@@ -12,6 +14,34 @@ app.use("/public", express.static(__dirname + "/public")); // 정적 파일을 �
 app.get("/", (req, res) => res.render("home")); // pug 파일중 home 렌더
 app.get("/*", (req, res) => res.redirect("/")); // 유저가 어디로 가든 home으로 리다이렉트
 
-// port 설정
 const handleListen = () => console.log(`Listening on http://localhost:${port}`);
-app.listen(port, handleListen);
+
+// 한 서버에서 http, websocket 서버 함께 설정 -> 한 localhost로 둘다 핸들
+const server = http.createServer(app);
+const wss = new WebSocket.Server({ server }); // http 서버 위에 wss 서버 설정
+
+const sockets = [];
+
+wss.on("connection", (socket) => {
+  sockets.push(socket);
+  socket["nickname"] = "익명의 사용자";
+
+  socket.on("message", (message) => {
+    const { type, payload } = JSON.parse(message);
+    sockets.forEach((eachSocket) => {
+      switch (type) {
+        case "message":
+          eachSocket.send(`${socket.nickname} :${payload}`);
+          break;
+        case "nickname":
+          socket["nickname"] = payload;
+          break;
+        default:
+          throw Error("알 수 없는 type 입니다.");
+      }
+    });
+  });
+  socket.on("close", () => console.log("브라우저 연결이 끊겼습니다 "));
+});
+
+server.listen(port, handleListen);

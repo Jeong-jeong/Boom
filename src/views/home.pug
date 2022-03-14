@@ -12,5 +12,11 @@ html(lang="ko")
 			h1 Boom 📸
 		main
 			h2 Boom에 오신 걸 환영합니다! 🎉
-			button Call
+			ul
+			form.nicknameForm
+				input(type="text", placeholder="닉네임을 생성하세요.", required)
+				button 보내기 
+			form.messageForm
+				input(type="text", placeholder="메시지를 작성하세요.", required)
+				button 보내기 
 		script(src="/public/js/app.js") 
