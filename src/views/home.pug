@@ -11,12 +11,16 @@ html(lang="ko")
 		header
 			h1 Boom 📸
 		main
-			h2 Boom에 오신 걸 환영합니다! 🎉
-			ul
-			form.nicknameForm
-				input(type="text", placeholder="닉네임을 생성하세요.", required)
-				button 보내기 
-			form.messageForm
-				input(type="text", placeholder="메시지를 작성하세요.", required)
-				button 보내기 
+			div.welcome
+				form
+					input.welcomeInput(placeholder="방문할 방을 입력해주세요" type="text" required)
+					input.nicknameInput(placeholder="닉네임을 만들어주세요" type="text" required)
+					button 입장하기
+			div.room
+				h3
+				ul
+				form
+					input(placeholder="메시지를 입력해주세요" type="text" required)
+					button 보내기
+		script(src="/socket.io/socket.io.js") 
 		script(src="/public/js/app.js") 

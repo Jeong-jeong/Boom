@@ -1,49 +1,61 @@
-// backend와 socket 연결
+const socket = io(); // io 함수가 자동으로 socket.io를 실행하는 서버를 찾음
 
-const { host } = window.location;
-const $messageList = document.querySelector("ul");
-const $messageForm = document.querySelector(".messageForm");
-const $messageInput = document.querySelector(".messageForm > input");
-const $messageButton = document.querySelector(".messageForm > button");
-const $nicknameForm = document.querySelector(".nicknameForm");
-const $nicknameInput = document.querySelector(".nicknameForm > input");
-const $nicknameButton = document.querySelector(".nicknameForm > button");
+const $welcome = document.querySelector(".welcome");
+const $welcomeForm = document.querySelector(".welcome > form");
+const $welcomeInput = document.querySelector(".welcome .welcomeInput");
+const $nicknameInput = document.querySelector(".welcome .nicknameInput");
+const $room = document.querySelector(".room");
+const $roomTitle = document.querySelector(".room > h3");
+const $roomForm = document.querySelector(".room > form");
+const $roomList = document.querySelector(".room > ul");
+const $roomInput = document.querySelector(".room input");
 
-const socket = new WebSocket(`ws://${host}`);
-socket.addEventListener("open", () => {
-  console.log("서버와 연결되었습니다 🚀");
-});
+let enteredRoom = "";
 
-$messageInput.focus();
+$room.hidden = true;
 
-socket.addEventListener("message", ({ data }) => {
-  const $messageItem = document.createElement("li");
-  $messageItem.innerText = data;
-  $messageList.appendChild($messageItem);
-});
+const showRoom = () => {
+  $welcome.hidden = true;
+  $room.hidden = false;
+  $roomTitle.innerText = enteredRoom;
+};
 
-socket.addEventListener("close", () => {
-  console.log("서버와 연결이 끊어졌습니다 👋");
-});
+const addNewItem = (message) => {
+  const li = document.createElement("li");
+  li.innerText = message;
+  $roomList.appendChild(li);
+};
 
-$messageForm.addEventListener("submit", (e) => submitMessage(e, "message"));
-$messageButton.addEventListener("click", (e) => submitMessage(e, "message"));
-$nicknameForm.addEventListener("submit", (e) => submitMessage(e, "nickname"));
-$nicknameButton.addEventListener("click", (e) => submitMessage(e, "nickname"));
-
-function submitMessage(e, type) {
+const handleEnterSubmit = (e) => {
   e.preventDefault();
-  const form = e.target.closest("form");
-  const payload =
-    form.className === "nicknameForm"
-      ? $nicknameInput.value
-      : $messageInput.value;
-  const data = {
-    type,
-    payload,
+  const payload = {
+    roomName: $welcomeInput.value,
+    nickname: $nicknameInput.value,
   };
-  socket.send(JSON.stringify(data));
 
-  $messageInput.value = "";
-  $nicknameInput.value = "";
-}
+  socket.emit("enterRoom", payload, (roomName) => {
+    // 마지막 인자로 백앤드에서 실행시킬 함수를 전달할 수 있음.
+    enteredRoom = roomName;
+    showRoom();
+  }); // 이벤트 이름을 맘대로 짓고, payload를 다양한 타입으로 보낼 수 있음.
+  $welcomeInput.value = "";
+};
+
+const handleMessageSubmit = (e) => {
+  e.preventDefault();
+
+  const payload = { message: $roomInput.value, roomName: enteredRoom };
+  socket.emit("newMessage", payload, (message) => {
+    addNewItem(`You: ${message}`);
+    $roomInput.value = "";
+  });
+};
+
+socket.on("welcome", (nickname) => {
+  alert(`${nickname}이(가) 입장하셨습니다 🌈`);
+});
+
+socket.on("newMessage", addNewItem);
+
+$welcomeForm.addEventListener("submit", handleEnterSubmit);
+$roomForm.addEventListener("submit", handleMessageSubmit);

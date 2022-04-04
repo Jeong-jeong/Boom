@@ -3,7 +3,8 @@
 ### express와 nodemon
 
 `Node.js`는 js로 브라우저가 아닌 서버를 구축하고, 서버에서 JS가 작동할 수 있게 해주는 런타임 환경이다. [(참고)](https://ninjaggobugi.tistory.com/9) <br>
-**express**는 Node.js를 서버에서 좀더 활용하기 쉽도록 만든 프레임워크이다. 프론트엔드에서 js를 SPA로 좀 더 쉽게 만들기 위해 리액트와 같은 라이브러리(프레임워크)를 만든 것과 같은 맥락이다.<br>
+`express`는 Node.js를 서버에서 좀더 활용하기 쉽도록 만든 프레임워크이다. 프론트엔드에서 js를 SPA로 좀 더 쉽게 만들기 위해 리액트와 같은 라이브러리(프레임워크)를 사용하는 것과 같은 같은 맥락이다.<br>
+<br>
 **템플릿 엔진**이란?<br>
 html 코드를 매번 만들 필요없이 최소화하도록 도와주는 템플릿이다.
 
@@ -20,7 +21,7 @@ app.set("views", __dirname + "/views"); // pug 파일 위치 설정
 app.use("/public", express.static(__dirname + "/public")); // 정적 파일을 제공할 폴더의 가상 경로 설정
 
 // route 설정
-app.get("/", (req, res) => res.render("home")); // pug 파일중 home 렌더
+app.get("/", (req, res) => res.render("home")); // pug 파일 중 home 렌더
 app.get("/*", (req, res) => res.redirect("/")); // 유저가 어디로 가든 home으로 리다이렉트
 
 // port 설정
@@ -44,7 +45,7 @@ html(lang="en")
 ```
 
 그렇다면 nodemon은 무엇일까?<br>
-`nodemon`은 소스가 수정될 때마다 자동으로 서버를 재구동시켜주기 때문에 편하다. `babel-node`가 사용되는 이유는 babel은 최신 js 문법들을 common.js 모듈로 바꿔주므로 서버사이드에서 사용할 수 있기 때문이다.
+`nodemon`은 소스가 수정될 때마다 자동으로 서버를 재구동시켜준다. `babel-node`를 사용해 최신 js 문법들을 common.js 모듈로 바꿔주므로 서버사이드에서 사용하기 위함(?)이다.
 
 ```json
 // nodemon.json
@@ -63,9 +64,11 @@ html(lang="en")
   },
 ```
 
+<br>
+
 ### MVP css 로 기본 css를 예쁘게 꾸며주기
 
-mvp.css는 reset, normalize.css와 달리 코드 한줄로 기본 스타일을 예쁘게 꾸며주는 데 사용된다.
+`mvp.css`는 reset, normalize.css와 달리 코드 한줄로 기본 스타일을 예쁘게 꾸며주는 데 사용된다.
 
 ```pug
 link(rel="stylesheet", href="https://unpkg.com/mvp.css")
@@ -82,7 +85,8 @@ link(rel="stylesheet", href="https://unpkg.com/mvp.css")
 ### HTTP VS WebSockets
 
 **http** <br>
-http는 stateless, connectionless 하기 때문에 요청과 응답이 이루어지면 연결이 끊긴다. node.js에 기본으로 http가 있으므로 따로 설치할 필요가 없다.
+http는 stateless, connectionless 하기 때문에 요청과 응답이 이루어지면 연결이 끊긴다. node.js에 기본으로 http가 있으므로 따로 설치할 필요가 없다.<br>
+
 **WebSocket**<br>
 webSocket도 일종의 프로토콜로, http와 정반대로 connection을 유지해 실시간 통신이 가능하게 한다. node.js에서 websocket을 활용하기 위해 `ws 패키지`를 활용할 것이다. 다만 채팅방 로직을 ws 만으로 구현하긴 어렵기 때문에 ws를 사용하는 프레임워크인 `Socket.io`를 나중에 활용해보고자 한다.
 
@@ -211,3 +215,65 @@ socket.addEventListener("message", ({ data }) => {
 1. 문자열이 아닌 데이터는 JSON 형태로 변환이 필요하다.
 2. 보내는 메세지를 구분할 기능이 존재하지 않는다.
 3. 다양한 사용자를 구분할 방의 구현을 따로 해야한다.
+
+## 3. 채팅에 Socket.io 활용하기
+
+### websocket VS socket.io
+
+- socket.io는 `프레임워크`로, webSocket을 사용할 수 있는 환경이면 그것을 사용하고, 아닐 경우 `HTTP long-polling`과 같은 다른 수단을 사용한다.
+- 연결에 실패해도 재연결을 시도한다.
+- websocket보다 용량이 크다.
+
+### 서버와 브라우저 연결하기
+
+socket.io를 설치 후 Server와 브라우저에 각각 연결을 먼저 해준다.
+
+```js
+// server.js
+import { Server } from "socket.io";
+
+const server = http.createServer(app);
+const io = new Server(server); // http로 만든 서버를 인수로 전달
+
+io.on("connection", () => {
+  // 연결 후 실행할 로직들 작성
+});
+```
+
+브라우저에 설치할 다양한 방법들이 있지만, 여기선 script를 통해 global scope로 연결할 것이다. 기타 다른 방법들은 [socket.io for Client API](https://socket.io/docs/v4/client-api/#socketopen)에서 확인!
+script로 연결하면 global scrope로 io 함수를 호출할 수 있다. io 함수는 자동으로 socket.io를 실행하는 서버를 찾아준다 👏👏.
+
+```js
+// home.pug
+<script src="/socket.io/socket.io.js"></script>;
+
+// app.js
+const socket = io();
+```
+
+브라우저에서 서버로 이벤트를 보낼 때는 `emit` 메서드를,
+이벤트를 받을 때는 `on` 메서드를 사용한다.
+
+```js
+socket.emit('임의의 이벤트', 보낼 데이터들, callback);
+
+socket.on("임의의 이벤트", callback);
+```
+
+callback은 이벤트 요청 이후 **서버로부터** 받는 callback이다. 클라이언트에서 emit, on 이벤트를 보냄과 동시에 서버가 실행하고 브라우저에서 받을 수 있는 엄청난 기능이다 ㄷㄷ.
+
+## Rooms
+
+1대 1, 1대 다 등 어떠한 그룹을 생성하기 위해선 socket.io의 room 기능을 사용하면 된다.
+
+```js
+// server.js
+socket.join(룸 이름) // room 참가
+socket.leave(룸 이름) // room leave
+```
+
+`socket.to`는 해당 room에 있는 **나를 제외한** 모든 사용자에게 특정 이벤트를 보낼 수 있는 기능이다.
+
+```js
+socket.to(roomName).emit("newMessage", `${socket.nickname} : ${message}`);
+```
