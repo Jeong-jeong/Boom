@@ -20,20 +20,45 @@ const handleListen = () => console.log(`Listening on http://localhost:${port}`);
 const server = http.createServer(app);
 const io = new Server(server);
 
+function getPublicRooms(io) {
+  const {
+    sockets: {
+      adapter: { rooms, sids },
+    },
+  } = io;
+
+  const publicRooms = [];
+  rooms.forEach((name, id) => {
+    if (sids.get(id) === undefined) publicRooms.push(id);
+  });
+
+  return publicRooms;
+}
+
 io.on("connection", (socket) => {
   socket.onAny((e) => {
     console.log(`Socket Event: ${e}`);
   });
+
   socket.on("enterRoom", ({ roomName, nickname }, enterComplete) => {
     socket["nickname"] = nickname;
     socket.join(roomName);
     enterComplete(roomName);
     socket.to(roomName).emit("welcome", nickname);
+    io.sockets.emit("roomChange", getPublicRooms(io));
   });
 
   socket.on("newMessage", ({ message, roomName }, submitMessage) => {
     submitMessage(message);
     socket.to(roomName).emit("newMessage", `${socket.nickname} : ${message}`);
+  });
+
+  socket.on("disconnecting", () => {
+    // @NOTE: 앱이 disconnect되기 전에 발생
+  });
+
+  socket.on("disconnect", () => {
+    io.sockets.emit("roomChange", getPublicRooms(io));
   });
 });
 // const wss = new WebSocket.Server({ server }); // http 서버 위에 wss 서버 설정
